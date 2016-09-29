@@ -1,0 +1,17 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="header_city_padding_top">5dp</dimen>
+    <dimen name="header_city_textsize">25sp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="weather_forecast_list_item_text">15sp</dimen>
+    <dimen name="list_item_text_padding">8dp</dimen>
+    <dimen name="suggestion_drst_padding">10dp</dimen>
+    <dimen name="attribution_text">12sp</dimen>
+    <dimen name="location_text">25sp</dimen>
+    <dimen name="suggestion_drsg_text">20sp</dimen>
+    <dimen name="suggestion_txt_text">15sp</dimen>
+    <dimen name="hourly_sugg_text">20sp</dimen>
+    <dimen name="current_temperature_text">30sp</dimen>
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/item_suggestion_uv_brf_text"
+        style="@style/SuggestionText"
+        android:text="防晒指数"/>
+    <TextView
+        android:id="@+id/item_suggestion_uv_txt_text"
+        android:text="紫外线强度较弱，建议出门涂擦SPF在12-15之间PA+的防晒护肤品"
+        style="@style/SuggestionTxtText"/>
+</LinearLayout>

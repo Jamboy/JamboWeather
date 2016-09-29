@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/header_title_layout"
+    android:background="@android:color/transparent">
+    
+    <android.support.v7.widget.Toolbar
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/header_toolbar"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        android:background="@android:color/transparent">
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:layout_weight="5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/header_city"
+            android:paddingTop="@dimen/header_city_padding_top"
+            android:textSize="@dimen/header_city_textsize"
+            android:textColor="@color/colorWhite"
+            style="@style/HeaderCityText"/>
+
+        <TextView
+            android:id="@+id/header_time"
+            android:textColor="@color/colorWhite"
+            style="@style/HeaderCityText"/>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/header_add_city"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:background="@drawable/add_city"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

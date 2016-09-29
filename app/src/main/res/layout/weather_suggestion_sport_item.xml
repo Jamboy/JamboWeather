@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+
+    <TextView
+        android:id="@+id/item_suggestion_sport_brf_text"
+        style="@style/SuggestionText"
+        android:text="运动指数"/>
+
+
+    <TextView
+        android:id="@+id/item_suggestion_sport_txt_text"
+        android:text="有降水，推荐您在室内进行健身休闲运动；若坚持户外运动，须注意携带雨具并注意避雨防滑"
+        style="@style/SuggestionTxtText"/>
+</LinearLayout>

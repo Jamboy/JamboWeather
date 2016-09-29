@@ -1,0 +1,95 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme"
+        parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="drawerArrowStyle">@style/WhiteDrawerIconStyle</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Notitle" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="WhiteDrawerIconStyle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">@color/colorWhite</item>
+    </style>
+
+    <style name="HeaderCityText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textColor">@color/colorWhite</item>
+
+
+    </style>
+
+    <style name="BaseText" parent="android:TextAppearance.Holo.Large">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:fontFamily">sans-serif-light</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+
+    <style name="HourlyText" parent="BaseText">
+        <item name="android:textSize">@dimen/hourly_sugg_text</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="SuggestionText" parent="BaseText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">@dimen/suggestion_drsg_text</item>
+        <item name="android:paddingTop">@dimen/suggestion_drst_padding</item>
+        <item name="android:paddingLeft">@dimen/suggestion_drst_padding</item>
+        <item name="android:paddingBottom">@dimen/suggestion_drst_padding</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="SuggestionTxtText" parent="BaseText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:paddingLeft">@dimen/suggestion_drst_padding</item>
+        <item name="android:textSize">@dimen/suggestion_txt_text</item>
+    </style>
+
+    <style name="CityText" parent="BaseText">
+        <item name="android:textSize">@dimen/location_text</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+
+    <style name="CurrentTemperatureText" parent="BaseText">
+        <item name="android:textSize">@dimen/current_temperature_text</item>
+        <item name="android:textColor">@color/brand_main</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">none</item>
+    </style>
+
+    <style name="WeatherForecastListItemText" parent="BaseText">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:textSize">@dimen/weather_forecast_list_item_text</item>
+        <item name="android:paddingTop">@dimen/list_item_text_padding</item>
+        <item name="android:paddingBottom">@dimen/list_item_text_padding</item>
+    </style>
+
+    <style name="WeatherForecastListItemTextEmphasis" parent="WeatherForecastListItemText">
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="WeatherForecastListItemTextDeEmphasis" parent="WeatherForecastListItemText">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+
+    <style name="AttributionText" parent="BaseText">
+        <item name="android:textSize">@dimen/attribution_text</item>
+        <item name="android:textColor">@color/text_faint</item>
+    </style>
+</resources>

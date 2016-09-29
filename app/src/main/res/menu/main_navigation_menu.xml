@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/city_group">
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/city_manager"
+            android:icon="@drawable/place"
+            android:title="城市管理"/>
+
+        <item
+            android:orderInCategory="0"
+            android:id="@+id/city_location"
+            android:icon="@drawable/place"
+            android:title="当前城市"/>
+
+    </group>
+
+    <group
+        android:id="@+id/setting">
+
+        <item
+            android:orderInCategory="1"
+            android:id="@+id/activity_settings"
+            android:icon="@drawable/setting"
+            android:title="设置"/>
+
+        <item
+            android:orderInCategory="1"
+            android:id="@+id/about"
+            android:icon="@drawable/about"
+            android:title="关于"/>
+    </group>
+
+</menu>

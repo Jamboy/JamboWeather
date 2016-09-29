@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <TextView
+        android:id="@+id/item_suggestion_truv_brf_text"
+        style="@style/SuggestionText"
+        android:text="旅游指数"/>
+    <TextView
+        android:id="@+id/item_suggestion_truv_txt_text"
+        android:text="有降水，温度适宜，在细雨中游玩别有一番情调，可不要错过机会呦！但记得出门要携带雨具"
+        style="@style/SuggestionTxtText"/>
+</LinearLayout>
