@@ -111,4 +111,18 @@ public class MainActivityPagerAdapter extends PagerAdapter {
         return mViewList.get(0);
     }
 
+    public View getCurrentView(int currentViewItem){
+        if (mViewList.get(currentViewItem) != null) {
+            return mViewList.get(currentViewItem);
+        }
+        return mViewList.get(0);
+    }
+
+    public List<View> getAllView(){
+        List list = new ArrayList();
+        for (int i = 0; i < mViewList.size(); i++){
+            list.add(mViewList.get(i));
+        }
+        return list;
+    }
 }

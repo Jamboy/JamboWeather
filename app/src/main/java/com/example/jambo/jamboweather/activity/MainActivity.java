@@ -2,7 +2,10 @@ package com.example.jambo.jamboweather.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -15,6 +18,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -38,10 +42,12 @@ import com.example.jambo.jamboweather.adapter.MainActivityPagerAdapter;
 import com.example.jambo.jamboweather.adapter.WeatherAdapter;
 import com.example.jambo.jamboweather.db.SelectedCityDBManager;
 import com.example.jambo.jamboweather.mould.Weather;
+import com.example.jambo.jamboweather.service.UpdateWeatherService;
 import com.example.jambo.jamboweather.util.ACache;
 import com.example.jambo.jamboweather.util.HttpUtil;
 import com.example.jambo.jamboweather.util.WeatherList;
 import java.util.ArrayList;
+import java.util.List;
 import rx.Observable;
 import rx.Observer;
 import rx.android.schedulers.AndroidSchedulers;
@@ -49,7 +55,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements AMapLocationListener,NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements AMapLocationListener,NavigationView.OnNavigationItemSelectedListener,SwipeRefreshLayout.OnRefreshListener{
     private ViewPager mViewPager;
     private NavigationView mNavigationView;
     private MainActivityPagerAdapter mainActivityPagerAdapter;
@@ -71,7 +77,11 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
     private String location_city;
     private SelectedCityDBManager selectedCityDBManager;
     private static final int LOCATION_REQUEST_CODE = 007;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private boolean isRefresh = false;
+    private static final String BROADCASTACTION = "android.jambo.jamboweather.broadcast";
+    private IntentFilter intentFilter;
+    private UpdateWeatherReceiver updateWeatherReceiver;
     /**
      * 先从数据库查询城市，若为空默认加载北京的天气，同时请求定位权限
      */
@@ -86,7 +96,17 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         location_city = mPreference.getString("location_city","");
         requestLocationPermission();
         loadCity();
+        startService(new Intent(this, UpdateWeatherService.class));
+        registerAlarmBoradcast();
     }
+
+    public void registerAlarmBoradcast(){
+        intentFilter = new IntentFilter();
+        intentFilter.addAction(BROADCASTACTION);
+        updateWeatherReceiver = new UpdateWeatherReceiver();
+        registerReceiver(updateWeatherReceiver,intentFilter);
+    }
+
 
 
     /**
@@ -96,10 +116,76 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         mViewPager = (ViewPager) findViewById(R.id.main_pager);
         mNavigationView = (NavigationView) findViewById(R.id.main_navigation_view);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.main_drawer_layout);
+        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.main_swipe_refresh_layout);
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setDistanceToTriggerSync(500);
+
 
         mNavigationView.setNavigationItemSelectedListener(this);
         mainActivityPagerAdapter = new MainActivityPagerAdapter();
         mViewPager.setAdapter(mainActivityPagerAdapter);
+
+    }
+
+
+    @Override public void onRefresh() {
+            refreshDate();
+    }
+
+    public void refreshDate(){
+        final View view = getCurrentView(mViewPager.getCurrentItem());
+        final String currentRefreshCity = view.getTag().toString();
+        mCityTV = (TextView) view.findViewById(R.id.header_city);
+        mTimeTV = (TextView) view.findViewById(R.id.header_time);
+        mRecyclerView = (RecyclerView) view.findViewById(R.id.recycler_view);
+        HttpUtil.getmWeatherApi().getWeather(currentRefreshCity,KEY)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(new Func1<WeatherList, Weather>() {
+                @Override public Weather call(WeatherList weatherList) {
+                    return weatherList.mWeathers.get(0);
+                }
+            })
+            .doOnNext(new Action1<Weather>() {
+                @Override public void call(Weather weather) {
+                    mACache.remove(currentRefreshCity);
+                    mACache.put(weather.basic.city,weather,4000);
+                }
+            })
+            .subscribe(new Observer<Weather>() {
+                @Override public void onCompleted() {
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+                @Override public void onError(Throwable e) {
+                    Log.e(currentRefreshCity,e.getMessage());
+                }
+                @Override public void onNext(Weather weather) {
+                    mTimeTV.setText(convertTime(weather.basic.update.loc));
+                    mWeatherAdapter = new WeatherAdapter(MainActivity.this,weather);
+                    mRecyclerView.setAdapter(mWeatherAdapter);
+                }
+            });
+    }
+
+
+    public void autoUpdate(){
+        removeViewList();
+        removeMenuItems();
+        loadCity();
+        Log.d("auto","update");
+    }
+
+
+    public void removeViewList(){
+        List<View> views = mainActivityPagerAdapter.getAllView();
+        for (View view : views){
+            removeView(view);
+        }
+    }
+
+
+    public View getCurrentView(int currentViewItem){
+        return mainActivityPagerAdapter.getCurrentView(currentViewItem);
     }
 
 
@@ -276,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
             })
             .doOnNext(new Action1<Weather>() {
                 @Override public void call(Weather weather) {
-                    mACache.put(city_name,weather);
+                    mACache.put(city_name,weather,4000);
                 }
             })
             .subscribe(observer);
@@ -417,7 +503,8 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
                 if (data != null) {
                     ArrayList<String> removeCities = data.getStringArrayListExtra("removeCities");
                     for (String name : removeCities) {
-                        int removeItemId = selectedCityDBManager.queryIdForName(name);
+                        int removeItemId = selectedCityDBManager.queryIdByName(name);
+                        Log.d("auto",removeItemId + "removeid");
                         removeView(mainActivityPagerAdapter.getViewForTag(name));
                         mNavigationView.getMenu().removeItem(removeItemId);
                         selectedCityDBManager.deleteCity(name);
@@ -429,6 +516,17 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         }
     }
 
+    private void removeMenuItems(){
+        List list = selectedCityDBManager.queryAllItemId();
+        for (int i = 0; i < list.size(); i++){
+            int id = (int)list.get(i);
+            mNavigationView.getMenu().removeItem(id);
+            Log.d("auto",id + "cityId");
+        }
+    }
+
+
+
     private void judgeSelectCity(String SelectCity){
         if (!selectedCityDBManager.isExisted(SelectCity)) {
             queryData(SelectCity);
@@ -437,4 +535,17 @@ public class MainActivity extends AppCompatActivity implements AMapLocationListe
         }
     }
 
+
+    @Override protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(updateWeatherReceiver);
+    }
+
+
+    public class UpdateWeatherReceiver extends BroadcastReceiver{
+
+        @Override public void onReceive(Context context, Intent intent) {
+            autoUpdate();
+        }
+    }
 }
