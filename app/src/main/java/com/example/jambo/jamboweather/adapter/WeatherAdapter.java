@@ -43,7 +43,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     public int getItemCount() {
         return 4;
     }
-
+    //test
     @Override
     public int getItemViewType(int position) {
         if (position == TYPE_NOW) {
